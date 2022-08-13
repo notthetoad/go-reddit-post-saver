@@ -3,6 +3,7 @@ module gitub.com/notthetoad/go-reddit-post-saver
 go 1.19
 
 require (
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/joho/godotenv v1.4.0
 	github.com/vartanbeno/go-reddit/v2 v2.0.1
 )
