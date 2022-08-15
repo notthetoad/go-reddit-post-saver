@@ -57,10 +57,6 @@ func (db *Database) QueryPostByID(id int64) (Post, error) {
     return pst, nil
 }
 
-func (db *Database) Test() string {
-    return "Hello World"
-}
-
 func (db *Database) QueryAllPosts() ([]Post, error) {
     var posts []Post
     rows, err := db.Db.Query("SELECT * FROM post;")
