@@ -27,7 +27,7 @@ func (db *Database) InitDb() {
         Passwd: os.Getenv("DBPASS"),
         Net: "tcp",
         Addr: "127.0.0.1:3306",
-        DBName: "post",
+        DBName: "goreddit",
         AllowNativePasswords: true,
     }
 

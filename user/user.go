@@ -27,13 +27,14 @@ func SignIn() *reddit.Client {
 
 func GetSavedPosts(client *reddit.Client) []*reddit.Post{
     posts, _, _, err := client.User.Saved(context.Background(), &reddit.ListUserOverviewOptions{
-        ListOptions: reddit.ListOptions{},
+        ListOptions: reddit.ListOptions{
+            Limit: 5,
+        },
         Time: "all",
     })
     if err != nil {
         fmt.Println(err)
     }
-    fmt.Println(posts)
     return posts
 }
 
