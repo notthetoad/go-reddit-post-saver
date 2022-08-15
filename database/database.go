@@ -3,12 +3,15 @@ package mdb
 import (
     "fmt"
     "database/sql"
-    //"github.com/go-sql-driver/mysql"
+    "github.com/go-sql-driver/mysql"
+    "os"
+    "log"
 )
 
 type Database struct {
     Db *sql.DB
 }
+//type tmp Database.Db
 
 type Post struct {
     ID int64
@@ -16,6 +19,31 @@ type Post struct {
     Body string
     Url string
 }
+
+func (db *Database) InitDb() {
+    var err error
+    cfg := mysql.Config{
+        User: os.Getenv("DBUSER"),
+        Passwd: os.Getenv("DBPASS"),
+        Net: "tcp",
+        Addr: "127.0.0.1:3306",
+        DBName: "post",
+        AllowNativePasswords: true,
+    }
+
+    sqldb, err := sql.Open("mysql", cfg.FormatDSN())
+    db.Db = sqldb
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    pingErr := db.Db.Ping()
+    if pingErr != nil {
+        log.Fatal(pingErr)
+    }
+    fmt.Println("Connected!")
+}
+
 
 func (db *Database) QueryPostByID(id int64) (Post, error) {
     var pst Post
