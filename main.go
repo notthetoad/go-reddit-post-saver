@@ -12,8 +12,7 @@ func main() {
 
     me := user.SignIn()    
 
-    posts := user.GetSavedPosts(me)
-    for i, val := range posts {
-        fmt.Println(i, val.Title, "https://reddit.com"+val.Permalink, val.URL)
-    }
+    posts, cmts := user.GetSavedCommentsAndPosts(me)
+    fmt.Println("posts: ", len(posts))
+    fmt.Println("comments: ", len(cmts))
 }
