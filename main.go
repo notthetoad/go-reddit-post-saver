@@ -15,4 +15,6 @@ func main() {
     posts, cmts := user.GetSavedCommentsAndPosts(me)
     fmt.Println("posts: ", len(posts))
     fmt.Println("comments: ", len(cmts))
+
+    db.SaveSinglePost(posts[len(posts)-1])
 }
