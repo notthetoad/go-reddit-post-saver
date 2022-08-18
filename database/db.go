@@ -50,6 +50,7 @@ func (db *Database) InitDb() {
 }
 
 
+<<<<<<< Updated upstream
 func (db *Database) QueryPostByID(id int64) (Post, error) {
     var pst Post
     row := db.Db.QueryRow("SELECT * FROM post WHERE id = ?", id)
@@ -80,4 +81,45 @@ func (db *Database) QueryAllPosts() ([]Post, error) {
         return nil, fmt.Errorf("%v\n", err)
     }
     return posts, nil
+=======
+//func (db *Database) QueryPostByID(id int64) (*reddit.Post, error) {
+//    var pst *reddit.Post
+//    row := db.Db.QueryRow("SELECT * FROM post WHERE id = ?", id)
+//    err := row.Scan(&pst.ID, &pst.Title, &pst.Body, &pst.Url); if err != nil {
+//        if err == sql.ErrNoRows {
+//            return pst, fmt.Errorf("postByID %d: no such post", id)
+//        }
+//        return pst, fmt.Errorf("postByID %d: %v", id, err)
+//    }
+//    return pst, nil
+//}
+
+//func (db *Database) QueryAllPosts() ([]*reddit.Post, error) {
+//    var posts []*reddit.Post
+//    rows, err := db.Db.Query("SELECT * FROM post;")
+//    if err != nil {
+//        return nil, fmt.Errorf("%v\n", err)
+//    }
+//    defer rows.Close()
+//    for rows.Next() {
+//        var pst Post
+//        if err := rows.Scan(&pst.ID, &pst.Title, &pst.Body, &pst.Url); err != nil {
+//            return nil, fmt.Errorf("%v\n", err)
+//        }
+//        posts = append(posts, pst)
+//    }
+//    if err := rows.Err(); err != nil {
+//        return nil, fmt.Errorf("%v\n", err)
+//    }
+//    return posts, nil
+//}
+
+func (db *Database) SaveSinglePost(p *reddit.Post) error {
+    _, err := db.Db.Exec("INSERT IGNORE INTO reddit_post (post_id, permalink, url, title, selftext, subreddit) VALUES (?, ?, ?, ?, ?, ?);", &p.FullID, &p.Permalink, &p.URL, &p.Title, &p.Body, &p.SubredditName)
+    if err != nil {
+        return err
+    }
+    return nil
+>>>>>>> Stashed changes
 }
+
