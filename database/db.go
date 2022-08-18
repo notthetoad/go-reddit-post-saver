@@ -11,6 +11,17 @@ import (
 
 type Database struct {
     Db *sql.DB
+    Cached map[int]interface{}
+}
+
+func (db *Database) Cache(data []*reddit.Post) {
+    if db.Cached == nil {
+        db.Cached = make(map[int]interface{})
+    }
+    for i, value := range data {
+        db.Cached[i] = value
+    } 
+    fmt.Println("cached")
 }
 
 //type Post struct {
