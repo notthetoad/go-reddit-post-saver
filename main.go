@@ -1,9 +1,10 @@
 package main
 
 import (
-    "example.com/mdb"
-    "example.com/user"
     "fmt"
+
+    "example.com/user"
+    "example.com/user/mdb"
 )
 
 func main() {
@@ -16,11 +17,21 @@ func main() {
     fmt.Println("posts: ", len(posts))
     fmt.Println("comments: ", len(cmts))
 
-    for _, post := range posts {
-        err := db.SaveSinglePost(post)
-        if err != nil {
-            fmt.Errorf("Error: %v", err)
+       for i, post := range posts {
+            err := db.SaveSinglePost(post)
+            if err != nil {
+                fmt.Errorf("Error inserting post: %v", err)
+            }
+            fmt.Println("post", i)
         }
-    }
-    fmt.Println("posts added to db")
+        fmt.Println("posts added to db")
+
+        for i, cmt := range cmts {
+            err := db.SaveSingleComment(cmt)
+            if err != nil {
+                fmt.Errorf("Error inserting comment: %v", err)
+            }
+            fmt.Println("comment", i)
+        }
+        fmt.Println("comments added to db")
 }
