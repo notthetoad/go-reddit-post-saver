@@ -13,19 +13,6 @@ type Database struct {
     Db *sql.DB
 }
 
-//type Post struct {
-//    ID int64
-//    Title string
-//    Body string
-//    Url string
-//}
-//
-//type Comment struct {
-//    ID int64
-//    Body string
-//    Url string
-//}
-
 func (db *Database) InitDb() {
     var err error
     cfg := mysql.Config{
