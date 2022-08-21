@@ -70,7 +70,7 @@ func (db *Database) InitDb() {
 //    return posts, nil
 
 func (db *Database) SaveSinglePost(p *reddit.Post) error {
-    _, err := db.Db.Exec("INSERT IGNORE INTO reddit_post (post_id, permalink, url, title, selftext, subreddit) VALUES (?, ?, ?, ?, ?, ?);", &p.FullID, &p.Permalink, &p.URL, &p.Title, &p.Body, &p.SubredditName)
+    _, err := db.Db.Exec("INSERT INTO reddit_post (post_id, permalink, url, title, selftext, subreddit) VALUES (?, ?, ?, ?, ?, ?);", &p.FullID, &p.Permalink, &p.URL, &p.Title, &p.Body, &p.SubredditName)
     if err != nil {
         return err
     }
@@ -78,9 +78,29 @@ func (db *Database) SaveSinglePost(p *reddit.Post) error {
 }
 
 func (db *Database) SaveSingleComment(cmt *reddit.Comment) error {
-    _, err := db.Db.Exec("INSERT IGNORE INTO reddit_comment (comment_id, permalink, selftext, subreddit) VALUES (?, ?, ?, ?);", &cmt.FullID, &cmt.Permalink, &cmt.Body, &cmt.SubredditName) 
+    _, err := db.Db.Exec("INSERT INTO reddit_comment (comment_id, permalink, selftext, subreddit) VALUES (?, ?, ?, ?);", &cmt.FullID, &cmt.Permalink, &cmt.Body, &cmt.SubredditName) 
     if err != nil {
         return err
     }
+    return nil
+}
+
+//func (db *Database) SaveAllPosts(posts []*reddit.Post) error {
+//    for _, post := range posts {
+//        err := db.SaveSinglePost(post)
+//        if err != nil {
+//            return err
+//        }
+//    } 
+//    return nil
+//}
+
+func (db *Database) SaveAllComments(comments []*reddit.Comment) error {
+    for _, cmt := range comments {
+        err := db.SaveSingleComment(cmt)
+        if err != nil {
+            return err
+        }
+    } 
     return nil
 }

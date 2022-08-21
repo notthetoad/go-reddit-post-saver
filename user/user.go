@@ -29,7 +29,7 @@ func GetSavedCommentsAndPosts(client *reddit.Client) ([]*reddit.Post, []*reddit.
     var allCmts []*reddit.Comment
     posts, cmts, resp, _ := client.User.Saved(context.Background(), &reddit.ListUserOverviewOptions{
         ListOptions: reddit.ListOptions{
-            Limit: 1,
+            Limit: 5,
         },
         Time: "all",
     })

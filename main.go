@@ -17,21 +17,13 @@ func main() {
     fmt.Println("posts: ", len(posts))
     fmt.Println("comments: ", len(cmts))
 
-        for i, post := range posts {
-            err := db.SaveSinglePost(post)
-            if err != nil {
-                fmt.Errorf("Error inserting post: %v", err)
-            }
-            fmt.Println("post", i)
-        }
-        fmt.Println("posts added to db")
-
-        for i, cmt := range cmts {
-            err := db.SaveSingleComment(cmt)
-            if err != nil {
-                fmt.Errorf("Error inserting comment: %v", err)
-            }
-            fmt.Println("comment", i)
-        }
-        fmt.Println("comments added to db")
+    db.SaveAllComments(cmts)
+    //if errp := db.SaveAllPosts(posts); errp != nil {
+    //    for i, p := range posts {
+    //        fmt.Println(i, p.FullID)
+    //    }
+    //}
+    for _, p := range posts {
+        db.SaveSinglePost(p)
+    }
 }
