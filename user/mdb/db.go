@@ -38,17 +38,35 @@ func (db *Database) InitDb() {
 }
 
 func (db *Database) SaveSinglePost(p *reddit.Post) error {
-    _, err := db.Db.Exec("INSERT IGNORE INTO reddit_post (post_id, permalink, url, title, selftext, subreddit) VALUES (?, ?, ?, ?, ?, ?);", &p.FullID, &p.Permalink, &p.URL, &p.Title, &p.Body, &p.SubredditName)
+    res, err := db.Db.Exec("INSERT INTO reddit_post (post_id, permalink, url, title, selftext, subreddit) VALUES (?, ?, ?, ?, ?, ?);", &p.FullID, &p.Permalink, &p.URL, &p.Title, &p.Body, &p.SubredditName)
     if err != nil {
         return err
     }
+    fmt.Println(res.LastInsertId())
     return nil
 }
 
 func (db *Database) SaveSingleComment(cmt *reddit.Comment) error {
-    _, err := db.Db.Exec("INSERT IGNORE INTO reddit_comment (comment_id, permalink, selftext, subreddit) VALUES (?, ?, ?, ?);", &cmt.FullID, &cmt.Permalink, &cmt.Body, &cmt.SubredditName) 
+    res, err := db.Db.Exec("INSERT INTO reddit_comment (comment_id, permalink, selftext, subreddit) VALUES (?, ?, ?, ?);", &cmt.FullID, &cmt.Permalink, &cmt.Body, &cmt.SubredditName) 
     if err != nil {
         return err
     }
+    fmt.Println(res.LastInsertId())
     return nil
+}
+
+func (db *Database) SaveAllPosts(posts []*reddit.Post) {
+    for _, p := range posts {
+        if err := db.SaveSinglePost(p); err != nil {
+            fmt.Println("Post: ", err)
+        }
+    }
+}
+
+func (db *Database) SaveAllComments(cmts []*reddit.Comment) {
+    for _, c := range cmts {
+        if err := db.SaveSingleComment(c); err != nil {
+            fmt.Println("Comment: ", err)
+        }
+    }
 }
