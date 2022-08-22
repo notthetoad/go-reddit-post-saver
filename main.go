@@ -18,12 +18,16 @@ func main() {
     go user.GetSavedCommentsAndPosts(me, pch, cch)
     for {
         select {
-            case posts := <- pch:
+            case posts, ok := <- pch:
+                if !ok {
+                    return
+                }
                 db.SaveAllPosts(posts)
-            case cmts := <- cch:
+            case cmts, ok := <- cch:
+                if !ok {
+                    return
+                }
                 db.SaveAllComments(cmts)
         }
     }
-    close(pch)
-    close(cch)
 }
