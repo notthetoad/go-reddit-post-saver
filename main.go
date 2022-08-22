@@ -13,25 +13,19 @@ func main() {
 
     me := user.SignIn()    
 
-    posts, cmts := user.GetSavedCommentsAndPosts(me)
-    fmt.Println("posts: ", len(posts))
-    fmt.Println("comments: ", len(cmts))
-
-       for i, post := range posts {
-            err := db.SaveSinglePost(post)
-            if err != nil {
-                fmt.Errorf("Error inserting post: %v", err)
-            }
-            fmt.Println("post", i)
+    go user.GetSavedCommentsAndPosts(me, pch, cch)
+    for {
+        select {
+            case posts, ok := <- pch:
+                if !ok {
+                    return
+                }
+                db.SaveAllPosts(posts)
+            case cmts, ok := <- cch:
+                if !ok {
+                    return
+                }
+                db.SaveAllComments(cmts)
         }
-        fmt.Println("posts added to db")
-
-        for i, cmt := range cmts {
-            err := db.SaveSingleComment(cmt)
-            if err != nil {
-                fmt.Errorf("Error inserting comment: %v", err)
-            }
-            fmt.Println("comment", i)
-        }
-        fmt.Println("comments added to db")
+    }
 }
