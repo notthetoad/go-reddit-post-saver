@@ -56,8 +56,7 @@ func (db *Database) SaveSingleComment(cmt *reddit.Comment) error {
 func (db *Database) SaveAllPosts(posts []*reddit.Post) {
     for _, p := range posts {
         if err := db.SaveSinglePost(p); err != nil {
-            fmt.Println(err)
-            os.Exit(1)
+            fmt.Println("Post: ", err)
         }
     }
 }
@@ -65,8 +64,7 @@ func (db *Database) SaveAllPosts(posts []*reddit.Post) {
 func (db *Database) SaveAllComments(cmts []*reddit.Comment) {
     for _, c := range cmts {
         if err := db.SaveSingleComment(c); err != nil {
-            fmt.Println(err)
-            os.Exit(1)
+            fmt.Println("Comment: ", err)
         }
     }
 }

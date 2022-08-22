@@ -1,8 +1,6 @@
 package main
 
 import (
-    "fmt"
-
     "example.com/user"
     "example.com/user/mdb"
     "github.com/vartanbeno/go-reddit/v2/reddit"
@@ -18,15 +16,14 @@ func main() {
     me := user.SignIn()    
 
     go user.GetSavedCommentsAndPosts(me, pch, cch)
-    go func(pch chan []*reddit.Post, cch chan []*reddit.Comment) {
-        user.GetSavedCommentsAndPosts(me, pch, cch)
-        for p := range pch {
-            fmt.Println(p)
-        } 
-    }(pch, cch)
-    //fmt.Println("posts: ", fmt.Println(<-pch))
-    //fmt.Println("comments: ", fmt.Println(<-pch))
-
-    //db.SaveAllPosts(posts)
-    //db.SaveAllComments(cmts)
+    for {
+        select {
+            case posts := <- pch:
+                db.SaveAllPosts(posts)
+            case cmts := <- cch:
+                db.SaveAllComments(cmts)
+        }
+    }
+    close(pch)
+    close(cch)
 }

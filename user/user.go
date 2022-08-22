@@ -25,17 +25,13 @@ func SignIn() *reddit.Client {
 }
 
 func GetSavedCommentsAndPosts(client *reddit.Client, pch chan []*reddit.Post, cch chan []*reddit.Comment) {
-    //var allPosts []*reddit.Post
-    //var allCmts []*reddit.Comment
     posts, cmts, resp, _ := client.User.Saved(context.Background(), &reddit.ListUserOverviewOptions{
         ListOptions: reddit.ListOptions{
             Limit: 5,
         },
         Time: "all",
     })
-    //allPosts = append(allPosts, posts...)
     pch <- posts  
-    //allCmts = append(allCmts, cmts...)
     cch <- cmts
     for resp.After != "" {
         posts, cmts, resp, _ = client.User.Saved(context.Background(), &reddit.ListUserOverviewOptions{
@@ -45,9 +41,7 @@ func GetSavedCommentsAndPosts(client *reddit.Client, pch chan []*reddit.Post, cc
             },
             Time: "all",
         })
-        //allPosts = append(allPosts, posts...)
         pch <- posts
-        //allCmts = append(allCmts, cmts...)
         cch <- cmts
     } 
     close(pch)
