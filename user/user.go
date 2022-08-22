@@ -24,28 +24,27 @@ func SignIn() *reddit.Client {
     return client
 }
 
-func GetSavedCommentsAndPosts(client *reddit.Client) ([]*reddit.Post, []*reddit.Comment) {
-    var allPosts []*reddit.Post
-    var allCmts []*reddit.Comment
-    posts, cmts, _, _ := client.User.Saved(context.Background(), &reddit.ListUserOverviewOptions{
+func GetSavedCommentsAndPosts(client *reddit.Client, pch chan []*reddit.Post, cch chan []*reddit.Comment) {
+    posts, cmts, resp, _ := client.User.Saved(context.Background(), &reddit.ListUserOverviewOptions{
         ListOptions: reddit.ListOptions{
-            Limit: 1,
+            Limit: 5,
         },
         Time: "all",
     })
-    allPosts = append(allPosts, posts...)
-    allCmts = append(allCmts, cmts...)
-    //for resp.After != "" {
-    //    posts, cmts, resp, _ = client.User.Saved(context.Background(), &reddit.ListUserOverviewOptions{
-    //        ListOptions: reddit.ListOptions{
-    //            Limit: 100,
-    //            After: resp.After,
-    //        },
-    //        Time: "all",
-    //    })
-    //    allPosts = append(allPosts, posts...)
-    //    allCmts = append(allCmts, cmts...)
-    //} 
-    return allPosts, allCmts
+    pch <- posts  
+    cch <- cmts
+    for resp.After != "" {
+        posts, cmts, resp, _ = client.User.Saved(context.Background(), &reddit.ListUserOverviewOptions{
+            ListOptions: reddit.ListOptions{
+                Limit: 100,
+                After: resp.After,
+            },
+            Time: "all",
+        })
+        pch <- posts
+        cch <- cmts
+    } 
+    close(pch)
+    close(cch)
 }
 
