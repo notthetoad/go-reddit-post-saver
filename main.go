@@ -1,15 +1,17 @@
 package main
 
 import (
-    "fmt"
-
     "example.com/user"
     "example.com/user/mdb"
+    "github.com/vartanbeno/go-reddit/v2/reddit"
 )
 
 func main() {
     db := mdb.Database{}
     db.InitDb()
+
+    pch := make(chan []*reddit.Post)
+    cch := make(chan []*reddit.Comment)
 
     me := user.SignIn()    
 
