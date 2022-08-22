@@ -38,18 +38,20 @@ func (db *Database) InitDb() {
 }
 
 func (db *Database) SaveSinglePost(p *reddit.Post) error {
-    _, err := db.Db.Exec("INSERT INTO reddit_post (post_id, permalink, url, title, selftext, subreddit) VALUES (?, ?, ?, ?, ?, ?);", &p.FullID, &p.Permalink, &p.URL, &p.Title, &p.Body, &p.SubredditName)
+    res, err := db.Db.Exec("INSERT INTO reddit_post (post_id, permalink, url, title, selftext, subreddit) VALUES (?, ?, ?, ?, ?, ?);", &p.FullID, &p.Permalink, &p.URL, &p.Title, &p.Body, &p.SubredditName)
     if err != nil {
         return err
     }
+    fmt.Println(res.LastInsertId())
     return nil
 }
 
 func (db *Database) SaveSingleComment(cmt *reddit.Comment) error {
-    _, err := db.Db.Exec("INSERT INTO reddit_comment (comment_id, permalink, selftext, subreddit) VALUES (?, ?, ?, ?);", &cmt.FullID, &cmt.Permalink, &cmt.Body, &cmt.SubredditName) 
+    res, err := db.Db.Exec("INSERT INTO reddit_comment (comment_id, permalink, selftext, subreddit) VALUES (?, ?, ?, ?);", &cmt.FullID, &cmt.Permalink, &cmt.Body, &cmt.SubredditName) 
     if err != nil {
         return err
     }
+    fmt.Println(res.LastInsertId())
     return nil
 }
 
