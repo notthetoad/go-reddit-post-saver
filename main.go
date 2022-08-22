@@ -5,18 +5,28 @@ import (
 
     "example.com/user"
     "example.com/user/mdb"
+    "github.com/vartanbeno/go-reddit/v2/reddit"
 )
 
 func main() {
     db := mdb.Database{}
     db.InitDb()
 
+    pch := make(chan []*reddit.Post)
+    cch := make(chan []*reddit.Comment)
+
     me := user.SignIn()    
 
-    posts, cmts := user.GetSavedCommentsAndPosts(me)
-    fmt.Println("posts: ", len(posts))
-    fmt.Println("comments: ", len(cmts))
+    go user.GetSavedCommentsAndPosts(me, pch, cch)
+    go func(pch chan []*reddit.Post, cch chan []*reddit.Comment) {
+        user.GetSavedCommentsAndPosts(me, pch, cch)
+        for p := range pch {
+            fmt.Println(p)
+        } 
+    }(pch, cch)
+    //fmt.Println("posts: ", fmt.Println(<-pch))
+    //fmt.Println("comments: ", fmt.Println(<-pch))
 
-    db.SaveAllPosts(posts)
-    db.SaveAllComments(cmts)
+    //db.SaveAllPosts(posts)
+    //db.SaveAllComments(cmts)
 }
