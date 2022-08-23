@@ -9,7 +9,7 @@ import (
 )
 
 func SignIn() *reddit.Client {
-    err := godotenv.Load("local.env")
+    err := godotenv.Load(".env")
     if err != nil {
         log.Fatal(err)
     }
